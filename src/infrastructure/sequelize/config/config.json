@@ -1,0 +1,16 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "marketplace",
+    "host": "127.0.0.1",
+    "database": "marketplace",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "marketplace",
+    "host": "127.0.0.1",
+    "database": "marketplace",
+    "dialect": "postgres"
+  }
+}
