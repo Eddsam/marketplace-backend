@@ -1,16 +1,16 @@
-import {
-  deleteUserController,
-  getSingleUserController,
-} from "@/domain/controllers/User.controller";
+import { UserRepositoryImpl } from "@/data/repositories/user.service";
+import { UserControllerImpl } from "@/domain/controllers/User.controller";
 import { withAuth } from "@/domain/middlewares/withAuth";
 import { NextRequest, NextResponse } from "next/server";
+
+const controller = new UserControllerImpl(new UserRepositoryImpl());
 
 async function guardGET(
   request: NextRequest,
   { params }: { params: Promise<{ id: number }> }
 ) {
   const { id } = await params;
-  const response = await getSingleUserController(id);
+  const response = await controller.getById(id);
   return NextResponse.json(response);
 }
 
@@ -19,7 +19,7 @@ async function guardDELETE(
   { params }: { params: Promise<{ id: number }> }
 ) {
   const { id } = await params;
-  const response = await deleteUserController(id);
+  const response = await controller.delete(id);
   return NextResponse.json(response);
 }
 

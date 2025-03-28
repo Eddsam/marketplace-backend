@@ -1,18 +1,30 @@
 import { SECRET } from "@/data/dotenv";
-import { getSigninUser } from "@/data/services/user.service";
 //@ts-ignore
 import jwt from "jsonwebtoken";
+import { IAuthController } from "../interfaces/controller/AuthController";
+import { IBaseResponse } from "../interfaces/BaseResponse";
+import { AuthRepositoryImpl } from "@/data/repositories/auth.service";
 
-export async function singinUser(username: string, password: string) {
-  try {
-    const data = await getSigninUser(username, password);
-    if (data) {
-      const data = jwt.sign({ username }, SECRET, { expiresIn: "2h" });
-      return { status: true, data };
+export class AuthControllerImpl implements IAuthController {
+  repository: AuthRepositoryImpl;
+
+  constructor(repository: AuthRepositoryImpl) {
+    this.repository = repository;
+  }
+
+  async login(
+    username: string,
+    password: string
+  ): Promise<IBaseResponse<string>> {
+    try {
+      const data = await this.repository.login(username, password);
+      if (!data) {
+        return { status: false, message: "Usuario inválido" };
+      }
+      const token = jwt.sign({ username }, SECRET, { expiresIn: "2h" });
+      return { status: true, data: token };
+    } catch (e: any) {
+      return { status: false, message: e.message };
     }
-
-    return { status: false, data: "Usuario inválido" };
-  } catch (e: any) {
-    return { status: false, message: e.message };
   }
 }

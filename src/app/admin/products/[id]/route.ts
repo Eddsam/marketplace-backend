@@ -1,16 +1,16 @@
-import {
-  deleteProductController,
-  getSingleProductsController,
-} from "@/domain/controllers/Product.controller";
+import { ProductRepositoryImpl } from "@/data/repositories/product.service";
+import { ProductControllerImpl } from "@/domain/controllers/Product.controller";
 import { withAuth } from "@/domain/middlewares/withAuth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
+const controller = new ProductControllerImpl(new ProductRepositoryImpl());
+
+async function guardGET(
   request: NextRequest,
   { params }: { params: Promise<{ id: number }> }
 ) {
   const { id } = await params;
-  const response = await getSingleProductsController(id);
+  const response = await controller.getById(id);
   return NextResponse.json(response);
 }
 
@@ -19,8 +19,9 @@ async function guardDELETE(
   { params }: { params: Promise<{ id: number }> }
 ) {
   const { id } = await params;
-  const response = await deleteProductController(id);
+  const response = await controller.delete(id);
   return NextResponse.json(response);
 }
 
+export const GET = withAuth(guardGET);
 export const DELETE = withAuth(guardDELETE);

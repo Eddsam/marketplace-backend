@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@supabase/ssr": "latest",
+    "@supabase/supabase-js": "latest",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
