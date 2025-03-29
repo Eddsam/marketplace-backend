@@ -22,7 +22,13 @@ export class AuthControllerImpl implements IAuthController {
       if (!data) {
         return { status: false, message: "Usuario inválido" };
       }
-      const token = jwt.sign({ username }, SECRET, { expiresIn: "2h" });
+      const token = jwt.sign(
+        { id: data.id, userTypeId: data.userTypeId, username },
+        SECRET,
+        {
+          expiresIn: "4h",
+        }
+      );
       return { status: true, data: token };
     } catch (e: any) {
       return { status: false, message: e.message };
