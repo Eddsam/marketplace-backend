@@ -5,9 +5,20 @@ import { createClient } from "@/infrastructure/supabase/server";
 import bcrypt from "bcrypt";
 
 export class AuthRepositoryImpl implements IAuthRepository {
-  async register(user: IUser): Promise<IUser> {
-    // Implement registration logic here
-    return user; // Placeholder return
+  async register(username: string, password: string): Promise<IUser> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("user")
+      .insert({
+        username,
+        password: bcrypt.hashSync(password, 10),
+        userTypeId: 2,
+      })
+      .single();
+    if (error) {
+      throw new Error("Error creating user: " + error.message);
+    }
+    return data as IUser;
   }
 
   async login(username: string, password: string): Promise<IUser> {

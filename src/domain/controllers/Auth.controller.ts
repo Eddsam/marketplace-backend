@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { IAuthController } from "../interfaces/controller/AuthController";
 import { IBaseResponse } from "../interfaces/BaseResponse";
 import { AuthRepositoryImpl } from "@/data/repositories/auth.service";
+import { IUser } from "../interfaces/User.interface";
 
 export class AuthControllerImpl implements IAuthController {
   repository: AuthRepositoryImpl;
@@ -23,6 +24,19 @@ export class AuthControllerImpl implements IAuthController {
       }
       const token = jwt.sign({ username }, SECRET, { expiresIn: "2h" });
       return { status: true, data: token };
+    } catch (e: any) {
+      return { status: false, message: e.message };
+    }
+  }
+
+  async register(
+    username: string,
+    password: string
+  ): Promise<IBaseResponse<IUser>> {
+    try {
+      const data = await this.repository.register(username, password);
+
+      return { status: true, data };
     } catch (e: any) {
       return { status: false, message: e.message };
     }

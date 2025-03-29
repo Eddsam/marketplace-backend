@@ -7,7 +7,8 @@ type Handler = (req: NextRequest, context?: any) => Promise<Response>;
 
 export function withAuth(handler: Handler): Handler {
   return async (req, context) => {
-    const token = req.cookies.get("token")?.value;
+    // const token = req.cookies.get("token")?.value;
+    const token = req.headers.get("Authorization")?.split(" ")[1];
 
     if (!token) {
       return new Response(
